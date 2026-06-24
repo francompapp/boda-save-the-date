@@ -66,6 +66,42 @@
             color: #5a5551;
         }
 
+        /* Language Selector */
+        .language-selector {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 200;
+            display: flex;
+            gap: 0.3rem;
+            background-color: rgba(250, 248, 245, 0.95);
+            padding: 0.5rem;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(93, 85, 77, 0.15);
+        }
+
+        .language-selector button {
+            background-color: transparent;
+            border: none;
+            color: #9d8b7e;
+            font-size: 0.85rem;
+            font-weight: 400;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .language-selector button:hover {
+            background-color: #f5f1ec;
+        }
+
+        .language-selector button.active {
+            background-color: #9d8b7e;
+            color: #faf8f5;
+        }
+
         /* Hero Section */
         #hero {
             min-height: 100vh;
@@ -411,6 +447,54 @@
             animation: slideIn 0.3s ease;
         }
 
+        .already-confirmed-message {
+            display: none;
+            background-color: #f0f0e8;
+            border: 1px solid #d4c9bf;
+            color: #5a5551;
+            padding: 2rem;
+            border-radius: 2px;
+            text-align: center;
+        }
+
+        .already-confirmed-message h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: #5a5551;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .already-confirmed-message p {
+            font-size: 1rem;
+            color: #7f756e;
+            line-height: 1.8;
+        }
+
+        .already-confirmed-message {
+            display: none;
+            background-color: #f0f0e8;
+            border: 1px solid #d4c9bf;
+            color: #5a5551;
+            padding: 2rem;
+            border-radius: 2px;
+            text-align: center;
+        }
+
+        .already-confirmed-message h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: #5a5551;
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .already-confirmed-message p {
+            font-size: 1rem;
+            color: #7f756e;
+            line-height: 1.8;
+        }
+
         .error-message {
             background-color: #f5e6e6;
             border: 1px solid #d4a9a9;
@@ -497,6 +581,17 @@
             .gallery-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .language-selector {
+                top: 0.5rem;
+                right: 0.5rem;
+                padding: 0.3rem;
+            }
+            
+            .language-selector button {
+                font-size: 0.75rem;
+                padding: 0.3rem 0.6rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -523,11 +618,18 @@
     </style>
 </head>
 <body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <button onclick="changeLanguage('es')" class="lang-btn active" data-lang="es">ES</button>
+        <button onclick="changeLanguage('ca')" class="lang-btn" data-lang="ca">CA</button>
+        <button onclick="changeLanguage('en')" class="lang-btn" data-lang="en">EN</button>
+    </div>
+
     <!-- Navigation -->
     <nav>
         <ul>
-            <li><a href="#hero">Inicio</a></li>
-            <li><a href="#rsvp">RSVP</a></li>
+            <li><a href="#hero" data-i18n="nav.home">Inicio</a></li>
+            <li><a href="#rsvp" data-i18n="nav.rsvp">RSVP</a></li>
         </ul>
     </nav>
 
@@ -538,69 +640,62 @@
                 <!-- Guest name will be inserted here -->
             </div>
             <h1>Laura & Franco</h1>
-            <div class="date">10 de octubre de 2026</div>
+            <div class="date">10 <span data-i18n="date.month">de octubre</span> <span data-i18n="date.year">de 2026</span></div>
             <div class="venue"><a href="https://maps.app.goo.gl/DBKC86aWkPJQn7vFA" target="_blank">El Xalet de Montjuïc, Barcelona</a></div>
-            <div class="scroll-hint">↓ Desplázate para más ↓</div>
+            <div class="scroll-hint" data-i18n="hero.scroll">↓ Desplázate para más ↓</div>
         </div>
     </section>
 
     <!-- Save the Date Notice -->
     <section id="notice" style="padding: 4rem 2rem; max-width: 800px; margin: 0 auto;">
         <div style="background-color: rgba(245, 241, 236, 0.8); border: 2px solid #e8e3dd; border-radius: 4px; padding: 3rem 2.5rem; text-align: center;">
-            <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: #3d3a37; margin-bottom: 1.5rem; font-weight: 400;">¡Atención! Este es un Save the Date para nuestra boda</h2>
+            <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 2rem; color: #3d3a37; margin-bottom: 1.5rem; font-weight: 400;" data-i18n="notice.title">¡Atención! Este es un Save the Date para nuestra boda</h2>
             <div style="font-size: 1rem; color: #5a5551; line-height: 1.8; max-width: 600px; margin: 0 auto;">
-                <p style="margin-bottom: 1.2rem;">Estamos montando la boda en tiempo récord y todavía hay algunos detalles que siguen en construcción. Lo único que necesitamos ahora es saber si podremos contar contigo.</p>
-                <p style="margin-bottom: 1.2rem;">Próximamente recibirás la invitación oficial con toda la información, horarios, menú y demás sorpresas.</p>
-                <p style="margin-bottom: 0; font-weight: 500; color: #7f756e;"><strong style="color: #5a5551;">Por ahora:</strong> guarda la fecha y dinos si vienes (idealmente antes del 1 de julio!)</p>
+                <p style="margin-bottom: 1.2rem;" data-i18n="notice.text1">Estamos montando la boda en tiempo récord y todavía hay algunos detalles que siguen en construcción... Por ahora, lo único que necesitamos es saber si podremos contar contigo (ojalá que sí!).</p>
+                <p style="margin-bottom: 1.2rem;" data-i18n="notice.text2">Próximamente recibirás la invitación oficial con toda la información, horarios y menú.</p>
+                <p style="margin-bottom: 0; font-weight: 500; color: #7f756e;"><strong style="color: #5a5551;" data-i18n="notice.now">Por ahora:</strong> <span data-i18n="notice.text3">guarda la fecha y dinos si vienes (idealmente antes del 1 de julio!)</span></p>
             </div>
         </div>
     </section>
 
     <!-- RSVP Form -->
     <section id="rsvp">
-        <h2>Confirma tu Asistencia</h2>
+        <h2 data-i18n="rsvp.title">Confirma tu Asistencia</h2>
         <div class="form-container">
             <div class="deadline-notice" style="text-align: center; margin-bottom: 2rem; padding: 1rem; background-color: #f5f1ec; border-radius: 2px;">
-                <p style="color: #7f756e; font-size: 0.95rem; margin: 0;">Por favor, confirma tu asistencia antes del <strong style="color: #5a5551;">1 de julio de 2026</strong></p>
+                <p style="color: #7f756e; font-size: 0.95rem; margin: 0;"><span data-i18n="rsvp.deadline">Por favor, confirma tu asistencia antes del</span> <strong style="color: #5a5551;">1 <span data-i18n="rsvp.deadlineMonth">de julio</span> 2026</strong></p>
             </div>
             <div class="error-message" id="errorMessage" style="display: none;">
-                <p>⚠️ Enlace inválido. Por favor, usa el enlace que recibiste por email.</p>
+                <p data-i18n="error.invalidLink">⚠️ Enlace inválido. Por favor, usa el enlace que recibiste por email.</p>
             </div>
             <div class="success-message" id="successMessage">
-                <p>¡Gracias por confirmar tu asistencia! Nos vemos en la boda 💕</p>
+                <p data-i18n="success.thanks">¡Gracias por confirmar tu asistencia! Nos vemos en la boda 💕</p>
+            </div>
+            <div class="already-confirmed-message" id="alreadyConfirmedMessage">
+                <h3 data-i18n="alreadyConfirmed.title">¡Gracias!</h3>
+                <p data-i18n="alreadyConfirmed.text1">Tu asistencia ya ha sido confirmada. Nos vemos el 10 de octubre de 2026 en El Xalet de Montjuïc.</p>
+                <p style="margin-top: 1rem;" data-i18n="alreadyConfirmed.text2">Si necesitas hacer algún cambio, por favor contáctanos directamente.</p>
             </div>
             <div id="loadingMessage" style="text-align: center; padding: 2rem; color: #9d8b7e;">
-                <p>Cargando tu información...</p>
+                <p data-i18n="loading">Cargando tu información...</p>
             </div>
             <form id="rsvpForm" style="display: none;">
                 <input type="hidden" id="rowIndex" name="rowIndex">
                 <input type="hidden" id="selectedGuest" name="selectedGuest">
-                <input type="hidden" id="tieneMas1" name="tieneMas1" value="false">
+                <input type="hidden" id="numCompanions" name="numCompanions" value="0">
 
                 <div class="form-group">
-                    <label>¿Confirmas tu asistencia? *</label>
+                    <label data-i18n="form.confirmQuestion">¿Confirmas tu asistencia? *</label>
                     <div class="toggle-group">
-                        <button type="button" class="toggle-btn active" data-value="Sí" onclick="toggleAsistencia(this)">Sí, confirmo</button>
-                        <button type="button" class="toggle-btn" data-value="No" onclick="toggleAsistencia(this)">No, lamentablemente no</button>
+                        <button type="button" class="toggle-btn active" data-value="Sí" onclick="toggleAsistencia(this)" data-i18n="form.yes">Sí, confirmo</button>
+                        <button type="button" class="toggle-btn" data-value="No" onclick="toggleAsistencia(this)" data-i18n="form.no">No, lamentablemente no</button>
                     </div>
                     <input type="hidden" id="asistencia" name="asistencia" value="Sí">
                 </div>
 
-                <div class="form-group" id="mas1Section" style="display: none;">
-                    <label for="nombre_mas1">Nombre de tu acompañante</label>
-                    <input type="text" id="nombre_mas1" name="nombre_mas1">
-                </div>
+                <div id="companionsSection"></div>
 
-                <div class="form-group" id="asistenciaMas1Section" style="display: none;">
-                    <label>¿Tu acompañante confirma asistencia?</label>
-                    <div class="toggle-group">
-                        <button type="button" class="toggle-btn active" data-value="Sí" onclick="toggleAsistenciaMas1(this)">Sí</button>
-                        <button type="button" class="toggle-btn" data-value="No" onclick="toggleAsistenciaMas1(this)">No</button>
-                    </div>
-                    <input type="hidden" id="asistencia_mas1" name="asistencia_mas1" value="Sí">
-                </div>
-
-                <button type="submit" class="submit-button">Enviar RSVP</button>
+                <button type="submit" class="submit-button" data-i18n="form.submit">Enviar RSVP</button>
             </form>
         </div>
     </section>
@@ -611,6 +706,145 @@
     </footer>
 
     <script>
+        // Translations
+        const translations = {
+            es: {
+                'nav.home': 'Inicio',
+                'nav.rsvp': 'RSVP',
+                'date.month': 'de octubre',
+                'date.year': 'de 2026',
+                'hero.scroll': '↓ Desplázate para más ↓',
+                'notice.title': '¡Atención! Este es un Save the Date para nuestra boda',
+                'notice.text1': 'Estamos montando la boda en tiempo récord y todavía hay algunos detalles que siguen en construcción... Por ahora, lo único que necesitamos es saber si podremos contar contigo (ojalá que sí!).',
+                'notice.text2': 'Próximamente recibirás la invitación oficial con toda la información, horarios y menú.',
+                'notice.now': 'Por ahora:',
+                'notice.text3': 'guarda la fecha y dinos si vienes (idealmente antes del 1 de julio!)',
+                'rsvp.title': 'Confirma tu Asistencia',
+                'rsvp.deadline': 'Por favor, confirma tu asistencia antes del',
+                'rsvp.deadlineMonth': 'de julio',
+                'error.invalidLink': '⚠️ Enlace inválido. Por favor, usa el enlace que recibiste por email.',
+                'success.thanks': '¡Gracias por confirmar tu asistencia! Nos vemos en la boda 💕',
+                'alreadyConfirmed.title': '¡Gracias!',
+                'alreadyConfirmed.text1': 'Tu asistencia ya ha sido confirmada. Nos vemos el 10 de octubre de 2026 en El Xalet de Montjuïc.',
+                'alreadyConfirmed.text2': 'Si necesitas hacer algún cambio, por favor contáctanos directamente.',
+                'loading': 'Cargando tu información...',
+                'form.confirmQuestion': '¿Confirmas tu asistencia? *',
+                'form.yes': 'Sí, confirmo',
+                'form.no': 'No, lamentablemente no',
+                'form.companion': 'Acompañante',
+                'form.companionName': 'Nombre del acompañante',
+                'form.companionConfirm': '¿Confirma asistencia?',
+                'form.submit': 'Enviar RSVP',
+                'greeting.dear': 'Querido/a'
+            },
+            ca: {
+                'nav.home': 'Inici',
+                'nav.rsvp': 'RSVP',
+                'date.month': 'd\'octubre',
+                'date.year': 'de 2026',
+                'hero.scroll': '↓ Desplaça\'t per més ↓',
+                'notice.title': 'Atenció! Aquest és un Save the Date per al nostre casament',
+                'notice.text1': 'Estem muntant el casament a contrarellotge i encara hi ha alguns detalls que segueixen en construcció... De moment, l\'únic que necessitem és saber si podrem comptar amb tu (esperem que sí!).',
+                'notice.text2': 'Properament rebràs la invitació oficial amb tota la informació, horaris i menú.',
+                'notice.now': 'De moment:',
+                'notice.text3': 'guarda la data i digues-nos si vindràs (idealment abans de l\'1 de juliol!)',
+                'rsvp.title': 'Confirma la teva Assistència',
+                'rsvp.deadline': 'Si us plau, confirma la teva assistència abans del',
+                'rsvp.deadlineMonth': 'de juliol',
+                'error.invalidLink': '⚠️ Enllaç invàlid. Si us plau, utilitza l\'enllaç que has rebut per email.',
+                'success.thanks': 'Gràcies per confirmar la teva assistència! Ens veiem al casament 💕',
+                'alreadyConfirmed.title': 'Gràcies!',
+                'alreadyConfirmed.text1': 'La teva assistència ja ha estat confirmada. Ens veiem el 10 d\'octubre de 2026 a El Xalet de Montjuïc.',
+                'alreadyConfirmed.text2': 'Si necessites fer algun canvi, si us plau contacta\'ns directament.',
+                'loading': 'Carregant la teva informació...',
+                'form.confirmQuestion': 'Confirmes la teva assistència? *',
+                'form.yes': 'Sí, confirmo',
+                'form.no': 'No, lamentablement no',
+                'form.companion': 'Acompanyant',
+                'form.companionName': 'Nom de l\'acompanyant',
+                'form.companionConfirm': 'Confirma assistència?',
+                'form.submit': 'Enviar RSVP',
+                'greeting.dear': 'Benvolgut/da'
+            },
+            en: {
+                'nav.home': 'Home',
+                'nav.rsvp': 'RSVP',
+                'date.month': 'October',
+                'date.year': ', 2026',
+                'hero.scroll': '↓ Scroll for more ↓',
+                'notice.title': 'Attention! This is a Save the Date for our wedding',
+                'notice.text1': 'We\'re putting together this wedding in record time and there are still some details under construction... For now, all we need to know is if we can count on you (we hope so!).',
+                'notice.text2': 'You\'ll receive the official invitation soon with all the information, schedules, and menu.',
+                'notice.now': 'For now:',
+                'notice.text3': 'save the date and let us know if you\'re coming (ideally before July 1st!)',
+                'rsvp.title': 'Confirm Your Attendance',
+                'rsvp.deadline': 'Please confirm your attendance before',
+                'rsvp.deadlineMonth': 'July',
+                'error.invalidLink': '⚠️ Invalid link. Please use the link you received by email.',
+                'success.thanks': 'Thank you for confirming your attendance! See you at the wedding 💕',
+                'alreadyConfirmed.title': 'Thank you!',
+                'alreadyConfirmed.text1': 'Your attendance has already been confirmed. See you on October 10th, 2026 at El Xalet de Montjuïc.',
+                'alreadyConfirmed.text2': 'If you need to make any changes, please contact us directly.',
+                'loading': 'Loading your information...',
+                'form.confirmQuestion': 'Do you confirm your attendance? *',
+                'form.yes': 'Yes, I confirm',
+                'form.no': 'No, unfortunately not',
+                'form.companion': 'Companion',
+                'form.companionName': 'Companion\'s name',
+                'form.companionConfirm': 'Confirm attendance?',
+                'form.submit': 'Send RSVP',
+                'greeting.dear': 'Dear'
+            }
+        };
+
+        // Current language
+        let currentLanguage = localStorage.getItem('weddingLanguage') || 'es';
+
+        // Change language function
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('weddingLanguage', lang);
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update dynamic content
+            updateDynamicContent(lang);
+        }
+
+        // Update dynamic content (errors, success messages, etc.)
+        function updateDynamicContent(lang) {
+            // Update greeting if guest is loaded
+            if (currentGuest) {
+                const greetingEl = document.getElementById('guestGreeting');
+                greetingEl.textContent = `${translations[lang]['greeting.dear']} ${currentGuest.nombre}`;
+            }
+            
+            // Recreate companion fields if they exist
+            const numCompanions = parseInt(document.getElementById('numCompanions')?.value) || 0;
+            if (numCompanions > 0) {
+                createCompanionFields(numCompanions);
+            }
+        }
+
+        // Initialize language on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            changeLanguage(currentLanguage);
+        });
+
         // Google Apps Script URL
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxY30ecCLGVEJtCRUT_98r0FTeIyINhltp_KHRd4BafNR0viDAWP_w9bofBrFKOhzucEw/exec';
         
@@ -626,46 +860,116 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const token = getTokenFromURL();
             
+            console.log('Token from URL:', token);
+            
             if (!token) {
+                console.error('No token provided in URL');
                 document.getElementById('loadingMessage').style.display = 'none';
                 document.getElementById('errorMessage').style.display = 'block';
                 return;
             }
 
             try {
-                const response = await fetch(`${APPS_SCRIPT_URL}?token=${token}`);
+                const fetchUrl = `${APPS_SCRIPT_URL}?token=${token}`;
+                console.log('Fetching guest data from:', fetchUrl);
+                
+                const response = await fetch(fetchUrl);
+                console.log('Response status:', response.status);
+                
                 const result = await response.json();
+                console.log('Response data:', result);
                 
                 if (result.status === 'success') {
                     currentGuest = result.guest;
+                    console.log('Guest loaded successfully:', currentGuest);
                     
                     // Show personalized greeting in hero
                     const greetingEl = document.getElementById('guestGreeting');
-                    greetingEl.textContent = `Querido/a ${currentGuest.nombre}`;
+                    greetingEl.textContent = `${translations[currentLanguage]['greeting.dear']} ${currentGuest.nombre}`;
                     greetingEl.style.opacity = '1';
+                    
+                    // Check if asistencia is already confirmed
+                    if (currentGuest.asistenciaConfirmada) {
+                        console.log('Asistencia already confirmed, showing thank you message');
+                        document.getElementById('loadingMessage').style.display = 'none';
+                        document.getElementById('alreadyConfirmedMessage').style.display = 'block';
+                        return;
+                    }
                     
                     // Fill form with guest data
                     document.getElementById('selectedGuest').value = currentGuest.nombre;
                     document.getElementById('rowIndex').value = currentGuest.rowIndex;
                     
-                    // Show +1 fields if guest has pareja
-                    const hasMas1 = currentGuest.pareja && currentGuest.pareja.trim() !== '';
-                    document.getElementById('tieneMas1').value = hasMas1 ? 'true' : 'false';
-                    updateMas1Fields(hasMas1);
+                    // Show companion fields based on number
+                    // Support both old 'pareja' and new 'numCompanions' format
+                    const numCompanions = currentGuest.numCompanions || parseInt(currentGuest.pareja) || 0;
+                    console.log('Number of companions:', numCompanions, '(from:', currentGuest.numCompanions || currentGuest.pareja, ')');
+                    document.getElementById('numCompanions').value = numCompanions;
+                    createCompanionFields(numCompanions);
                     
                     // Show form, hide loading
                     document.getElementById('loadingMessage').style.display = 'none';
                     document.getElementById('rsvpForm').style.display = 'block';
                 } else {
+                    console.error('Invalid token or error from server:', result.message);
                     document.getElementById('loadingMessage').style.display = 'none';
                     document.getElementById('errorMessage').style.display = 'block';
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error fetching guest data:', error);
                 document.getElementById('loadingMessage').style.display = 'none';
                 document.getElementById('errorMessage').style.display = 'block';
             }
         });
+
+        // Create companion fields dynamically
+        function createCompanionFields(numCompanions) {
+            const container = document.getElementById('companionsSection');
+            container.innerHTML = '';
+            
+            if (numCompanions === 0) {
+                return;
+            }
+            
+            const lang = currentLanguage;
+            
+            for (let i = 1; i <= numCompanions; i++) {
+                const companionDiv = document.createElement('div');
+                companionDiv.className = 'companion-group';
+                companionDiv.style.marginTop = '2rem';
+                companionDiv.style.padding = '1.5rem';
+                companionDiv.style.backgroundColor = '#f5f1ec';
+                companionDiv.style.borderRadius = '4px';
+                
+                companionDiv.innerHTML = `
+                    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: #5a5551; margin-bottom: 1rem; font-weight: 400;">${translations[lang]['form.companion']} ${i}</h3>
+                    
+                    <div class="form-group">
+                        <label for="companion_${i}_nombre">${translations[lang]['form.companionName']} ${i}</label>
+                        <input type="text" id="companion_${i}_nombre" name="companion_${i}_nombre" style="width: 100%; padding: 0.8rem; font-family: 'Montserrat', sans-serif; font-size: 0.95rem; color: #5a5551; background-color: #fdfbf8; border: 1px solid #e8e3dd; border-radius: 2px;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>${translations[lang]['form.companionConfirm']}</label>
+                        <div class="toggle-group">
+                            <button type="button" class="toggle-btn active" data-companion="${i}" data-value="Sí" onclick="toggleCompanionAsistencia(this, ${i})">${translations[lang]['form.yes']}</button>
+                            <button type="button" class="toggle-btn" data-companion="${i}" data-value="No" onclick="toggleCompanionAsistencia(this, ${i})">${translations[lang]['form.no']}</button>
+                        </div>
+                        <input type="hidden" id="companion_${i}_asistencia" name="companion_${i}_asistencia" value="Sí">
+                    </div>
+                `;
+                
+                container.appendChild(companionDiv);
+            }
+        }
+
+        // Toggle companion asistencia buttons
+        function toggleCompanionAsistencia(button, companionNum) {
+            const parent = button.closest('.toggle-group');
+            parent.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            document.getElementById(`companion_${companionNum}_asistencia`).value = button.getAttribute('data-value');
+        }
 
         // Update +1 fields visibility
         function updateMas1Fields(hasMas1) {
@@ -705,21 +1009,33 @@
             const nombre = document.getElementById('selectedGuest').value;
             const rowIndex = document.getElementById('rowIndex').value;
             const asistencia = document.getElementById('asistencia').value;
-            const tieneMas1 = document.getElementById('tieneMas1').value === 'true';
+            const numCompanions = parseInt(document.getElementById('numCompanions').value) || 0;
             
             const data = {
                 nombre,
                 rowIndex: parseInt(rowIndex),
-                asistencia
+                asistencia,
+                companions: []
             };
 
-            // Add +1 data if applicable
-            if (tieneMas1) {
-                data.nombre_mas1 = document.getElementById('nombre_mas1').value;
-                data.asistencia_mas1 = document.getElementById('asistencia_mas1').value;
+            // Collect companion data
+            for (let i = 1; i <= numCompanions; i++) {
+                const nombreInput = document.getElementById(`companion_${i}_nombre`);
+                const asistenciaInput = document.getElementById(`companion_${i}_asistencia`);
+                
+                if (nombreInput && asistenciaInput) {
+                    data.companions.push({
+                        nombre: nombreInput.value,
+                        asistencia: asistenciaInput.value
+                    });
+                }
             }
 
+            console.log('Submitting RSVP data:', data);
+
             try {
+                console.log('Sending POST request to:', APPS_SCRIPT_URL);
+                
                 const response = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -729,15 +1045,23 @@
                     body: JSON.stringify(data)
                 });
 
+                console.log('RSVP submission response (no-cors mode, limited info):', response);
+
                 // Show success message
                 const successMessage = document.getElementById('successMessage');
                 successMessage.classList.add('show');
 
                 // Hide form
                 document.getElementById('rsvpForm').style.display = 'none';
+                
+                console.log('RSVP submitted successfully');
 
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error submitting RSVP:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    stack: error.stack
+                });
                 alert('Hubo un error al enviar el formulario. Por favor, intenta de nuevo.');
             }
         });
