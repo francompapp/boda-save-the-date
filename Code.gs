@@ -1,25 +1,40 @@
-// Fetch guest list for form autocomplete
+// Fetch guest data by token
 function doGet(e) {
   try {
+    const token = e.parameter.token;
+    
+    if (!token) {
+      return ContentService.createTextOutput(JSON.stringify({
+        status: 'error',
+        message: 'Token no proporcionado'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+    
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = ss.getActiveSheet();
     const data = sheet.getDataRange().getValues();
     
-    // Build guest list (skip header row)
-    const guests = [];
+    // Find guest by token (skip header row)
     for (let i = 1; i < data.length; i++) {
-      guests.push({
-        numero: data[i][0],
-        nombre: data[i][2],
-        pareja: data[i][3],
-        rowIndex: i + 1
-      });
+      if (data[i][1].toString() === token.toString()) {
+        return ContentService.createTextOutput(JSON.stringify({
+          status: 'success',
+          guest: {
+            numero: data[i][0],
+            token: data[i][1],
+            nombre: data[i][3],
+            pareja: data[i][4],
+            rowIndex: i + 1
+          }
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
     }
     
     return ContentService.createTextOutput(JSON.stringify({
-      status: 'success',
-      guests: guests
+      status: 'error',
+      message: 'Token inválido'
     })).setMimeType(ContentService.MimeType.JSON);
+    
   } catch (error) {
     return ContentService.createTextOutput(JSON.stringify({
       status: 'error',
@@ -47,12 +62,12 @@ function doPost(e) {
     }
     
     // Update the row
-    // Column E (index 4): Asistencia
-    // Column F (index 5): Asistencia +1
-    // Column G (index 6): Nombre +1
-    sheet.getRange(rowIndex, 5).setValue(payload.asistencia); // Asistencia
-    sheet.getRange(rowIndex, 6).setValue(payload.asistencia_mas1 || ''); // Asistencia +1
-    sheet.getRange(rowIndex, 7).setValue(payload.nombre_mas1 || ''); // Nombre +1
+    // Column F (index 5): Asistencia
+    // Column G (index 6): Asistencia +1
+    // Column H (index 7): Nombre +1
+    sheet.getRange(rowIndex, 6).setValue(payload.asistencia); // Asistencia
+    sheet.getRange(rowIndex, 7).setValue(payload.asistencia_mas1 || ''); // Asistencia +1
+    sheet.getRange(rowIndex, 8).setValue(payload.nombre_mas1 || ''); // Nombre +1
     
     // Return a success response
     return ContentService.createTextOutput(JSON.stringify({

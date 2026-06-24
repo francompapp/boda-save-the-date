@@ -351,23 +351,6 @@
             border-color: #9d8b7e;
         }
 
-        .guest-suggestion {
-            padding: 0.8rem;
-            cursor: pointer;
-            border-bottom: 1px solid #e8e3dd;
-            transition: background-color 0.2s ease;
-            font-size: 0.9rem;
-            color: #5a5551;
-        }
-
-        .guest-suggestion:hover {
-            background-color: #f0f0e8;
-        }
-
-        .guest-suggestion:last-child {
-            border-bottom: none;
-        }
-
         .toggle-group {
             display: flex;
             gap: 1rem;
@@ -426,6 +409,16 @@
             text-align: center;
             margin-bottom: 1.5rem;
             animation: slideIn 0.3s ease;
+        }
+
+        .error-message {
+            background-color: #f5e6e6;
+            border: 1px solid #d4a9a9;
+            color: #8b5555;
+            padding: 1.5rem;
+            border-radius: 2px;
+            text-align: center;
+            margin-bottom: 1.5rem;
         }
 
         @keyframes slideIn {
@@ -552,14 +545,20 @@
     <section id="rsvp">
         <h2>Confirma tu Asistencia</h2>
         <div class="form-container">
+            <div class="error-message" id="errorMessage" style="display: none;">
+                <p>⚠️ Enlace inválido. Por favor, usa el enlace que recibiste por email.</p>
+            </div>
             <div class="success-message" id="successMessage">
                 <p>¡Gracias por confirmar tu asistencia! Nos vemos en la boda 💕</p>
             </div>
-            <form id="rsvpForm">
+            <div id="loadingMessage" style="text-align: center; padding: 2rem; color: #9d8b7e;">
+                <p>Cargando tu información...</p>
+            </div>
+            <form id="rsvpForm" style="display: none;">
                 <div class="form-group">
-                    <label for="guestSearch">Busca tu nombre *</label>
-                    <input type="text" id="guestSearch" name="guestSearch" placeholder="Empieza a escribir tu nombre..." autocomplete="off" required>
-                    <div id="guestSuggestions" style="display: none; border: 1px solid #e8e3dd; border-top: none; max-height: 200px; overflow-y: auto; background-color: #fdfbf8;">
+                    <label>Invitado</label>
+                    <div style="padding: 0.8rem; background-color: #f5f1ec; border: 1px solid #e8e3dd; border-radius: 2px; color: #5a5551; font-weight: 500;">
+                        <span id="guestName"></span>
                     </div>
                 </div>
 
@@ -590,7 +589,7 @@
                     <input type="hidden" id="asistencia_mas1" name="asistencia_mas1" value="Sí">
                 </div>
 
-                <button type="submit" class="submit-button" disabled>Enviar RSVP</button>
+                <button type="submit" class="submit-button">Enviar RSVP</button>
             </form>
         </div>
     </section>
@@ -604,72 +603,54 @@
         // Google Apps Script URL
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxY30ecCLGVEJtCRUT_98r0FTeIyINhltp_KHRd4BafNR0viDAWP_w9bofBrFKOhzucEw/exec';
         
-        let allGuests = [];
-        let selectedGuestData = null;
+        let currentGuest = null;
 
-        // Fetch guest list on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchGuestList();
-        });
+        // Get token from URL
+        function getTokenFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('token');
+        }
 
-        // Fetch guest list from Apps Script
-        async function fetchGuestList() {
+        // Fetch guest data on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = getTokenFromURL();
+            
+            if (!token) {
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+
             try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'GET',
-                    mode: 'cors'
-                });
+                const response = await fetch(`${APPS_SCRIPT_URL}?token=${token}`);
                 const result = await response.json();
+                
                 if (result.status === 'success') {
-                    allGuests = result.guests;
+                    currentGuest = result.guest;
+                    
+                    // Fill form with guest data
+                    document.getElementById('guestName').textContent = currentGuest.nombre;
+                    document.getElementById('selectedGuest').value = currentGuest.nombre;
+                    document.getElementById('rowIndex').value = currentGuest.rowIndex;
+                    
+                    // Show +1 fields if guest has pareja
+                    const hasMas1 = currentGuest.pareja && currentGuest.pareja.trim() !== '';
+                    document.getElementById('tieneMas1').value = hasMas1 ? 'true' : 'false';
+                    updateMas1Fields(hasMas1);
+                    
+                    // Show form, hide loading
+                    document.getElementById('loadingMessage').style.display = 'none';
+                    document.getElementById('rsvpForm').style.display = 'block';
+                } else {
+                    document.getElementById('loadingMessage').style.display = 'none';
+                    document.getElementById('errorMessage').style.display = 'block';
                 }
             } catch (error) {
-                console.error('Error fetching guest list:', error);
+                console.error('Error:', error);
+                document.getElementById('loadingMessage').style.display = 'none';
+                document.getElementById('errorMessage').style.display = 'block';
             }
-        }
-
-        // Guest search with autocomplete
-        document.getElementById('guestSearch').addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase().trim();
-            const suggestionsDiv = document.getElementById('guestSuggestions');
-            
-            if (searchTerm.length < 1) {
-                suggestionsDiv.style.display = 'none';
-                return;
-            }
-
-            const matches = allGuests.filter(guest => 
-                guest.nombre.toLowerCase().includes(searchTerm)
-            );
-
-            if (matches.length === 0) {
-                suggestionsDiv.style.display = 'none';
-                return;
-            }
-
-            suggestionsDiv.innerHTML = matches.map(guest => 
-                `<div class="guest-suggestion" onclick="selectGuest('${guest.nombre}', '${guest.rowIndex}', '${guest.pareja ? 'true' : 'false'}')">
-                    ${guest.nombre}
-                </div>`
-            ).join('');
-            suggestionsDiv.style.display = 'block';
         });
-
-        // Select a guest from suggestions
-        function selectGuest(nombre, rowIndex, tieneMas1) {
-            document.getElementById('guestSearch').value = nombre;
-            document.getElementById('selectedGuest').value = nombre;
-            document.getElementById('rowIndex').value = rowIndex;
-            document.getElementById('tieneMas1').value = tieneMas1;
-            
-            document.getElementById('guestSuggestions').style.display = 'none';
-            
-            // Show/hide +1 fields based on whether they have a pareja
-            updateMas1Fields(tieneMas1 === 'true');
-            
-            // Enable submit button
-            document.querySelector('.submit-button').disabled = false;
-        }
 
         // Update +1 fields visibility
         function updateMas1Fields(hasMas1) {
@@ -685,18 +666,6 @@
                 document.getElementById('nombre_mas1').value = '';
                 document.getElementById('asistencia_mas1').value = 'Sí';
             }
-        }
-
-        // Copy IBAN to clipboard
-        function copyIBAN() {
-            const iban = document.getElementById('iban').textContent;
-            navigator.clipboard.writeText(iban).then(() => {
-                const feedback = document.getElementById('copyFeedback');
-                feedback.style.display = 'block';
-                setTimeout(() => {
-                    feedback.style.display = 'none';
-                }, 2000);
-            });
         }
 
         // Toggle asistencia buttons
@@ -749,23 +718,9 @@
                 const successMessage = document.getElementById('successMessage');
                 successMessage.classList.add('show');
 
-                // Reset form after 2 seconds
-                setTimeout(() => {
-                    document.getElementById('rsvpForm').reset();
-                    document.getElementById('selectedGuest').value = '';
-                    document.getElementById('rowIndex').value = '';
-                    document.getElementById('tieneMas1').value = 'false';
-                    document.querySelector('.submit-button').disabled = true;
-                    document.querySelectorAll('.toggle-btn').forEach((btn, index) => {
-                        if (index === 0) btn.classList.add('active');
-                        else btn.classList.remove('active');
-                    });
-                    document.getElementById('asistencia').value = 'Sí';
-                    document.getElementById('asistencia_mas1').value = 'Sí';
-                    document.getElementById('nombre_mas1').value = '';
-                    updateMas1Fields(false);
-                    successMessage.classList.remove('show');
-                }, 3000);
+                // Hide form
+                document.getElementById('rsvpForm').style.display = 'none';
+
             } catch (error) {
                 console.error('Error:', error);
                 alert('Hubo un error al enviar el formulario. Por favor, intenta de nuevo.');
