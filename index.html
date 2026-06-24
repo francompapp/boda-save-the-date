@@ -13,7 +13,23 @@
         }
 
         body {
-            background-color: #faf8f5;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(157, 139, 126, 0.03) 2px,
+                    rgba(157, 139, 126, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(157, 139, 126, 0.03) 2px,
+                    rgba(157, 139, 126, 0.03) 4px
+                ),
+                linear-gradient(135deg, #faf8f5 0%, #f5f1ec 100%);
+            background-attachment: fixed;
             color: #5a5551;
             font-family: 'Montserrat', sans-serif;
             font-weight: 300;
@@ -58,22 +74,6 @@
             justify-content: center;
             text-align: center;
             padding: 4rem 2rem;
-            background: 
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(157, 139, 126, 0.03) 2px,
-                    rgba(157, 139, 126, 0.03) 4px
-                ),
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(157, 139, 126, 0.03) 2px,
-                    rgba(157, 139, 126, 0.03) 4px
-                ),
-                linear-gradient(135deg, #faf8f5 0%, #f5f1ec 100%);
             position: relative;
         }
 
@@ -217,7 +217,7 @@
 
         /* Gallery */
         #galeria {
-            background-color: #fdfbf8;
+            background-color: transparent;
         }
 
         .gallery-grid {
@@ -246,7 +246,7 @@
 
         /* Regalos Section */
         #regalos {
-            background-color: #fdfbf8;
+            background-color: transparent;
         }
 
         .regalo-content {
@@ -312,7 +312,7 @@
 
         /* RSVP Form */
         #rsvp {
-            background-color: #faf8f5;
+            background-color: transparent;
         }
 
         .form-container {
