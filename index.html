@@ -534,6 +534,9 @@
     <!-- Hero Section -->
     <section id="hero">
         <div class="hero-content">
+            <div class="guest-greeting" id="guestGreeting" style="font-family: 'Montserrat', sans-serif; font-size: 1rem; color: #9d8b7e; margin-bottom: 2rem; font-weight: 300; letter-spacing: 1px; opacity: 0; transition: opacity 0.5s ease;">
+                <!-- Guest name will be inserted here -->
+            </div>
             <h1>Laura & Franco</h1>
             <div class="date">10 de octubre de 2026</div>
             <div class="venue"><a href="https://maps.app.goo.gl/DBKC86aWkPJQn7vFA" target="_blank">El Xalet de Montjuïc, Barcelona</a></div>
@@ -627,6 +630,11 @@
                 
                 if (result.status === 'success') {
                     currentGuest = result.guest;
+                    
+                    // Show personalized greeting in hero
+                    const greetingEl = document.getElementById('guestGreeting');
+                    greetingEl.textContent = `Querido/a ${currentGuest.nombre}`;
+                    greetingEl.style.opacity = '1';
                     
                     // Fill form with guest data
                     document.getElementById('guestName').textContent = currentGuest.nombre;
