@@ -548,6 +548,9 @@
     <section id="rsvp">
         <h2>Confirma tu Asistencia</h2>
         <div class="form-container">
+            <div class="deadline-notice" style="text-align: center; margin-bottom: 2rem; padding: 1rem; background-color: #f5f1ec; border-radius: 2px;">
+                <p style="color: #7f756e; font-size: 0.95rem; margin: 0;">Por favor, confirma tu asistencia antes del <strong style="color: #5a5551;">1 de julio de 2026</strong></p>
+            </div>
             <div class="error-message" id="errorMessage" style="display: none;">
                 <p>⚠️ Enlace inválido. Por favor, usa el enlace que recibiste por email.</p>
             </div>
@@ -558,13 +561,6 @@
                 <p>Cargando tu información...</p>
             </div>
             <form id="rsvpForm" style="display: none;">
-                <div class="form-group">
-                    <label>Invitado</label>
-                    <div style="padding: 0.8rem; background-color: #f5f1ec; border: 1px solid #e8e3dd; border-radius: 2px; color: #5a5551; font-weight: 500;">
-                        <span id="guestName"></span>
-                    </div>
-                </div>
-
                 <input type="hidden" id="rowIndex" name="rowIndex">
                 <input type="hidden" id="selectedGuest" name="selectedGuest">
                 <input type="hidden" id="tieneMas1" name="tieneMas1" value="false">
@@ -637,7 +633,6 @@
                     greetingEl.style.opacity = '1';
                     
                     // Fill form with guest data
-                    document.getElementById('guestName').textContent = currentGuest.nombre;
                     document.getElementById('selectedGuest').value = currentGuest.nombre;
                     document.getElementById('rowIndex').value = currentGuest.rowIndex;
                     
